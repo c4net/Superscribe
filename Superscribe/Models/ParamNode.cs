@@ -1,9 +1,7 @@
 ﻿namespace Superscribe.Models
 {
     using System;
-    using System.ComponentModel;
-    using System.Globalization;
-
+    
     public abstract class ParamNode : GraphNode
     {
         private object value;
@@ -30,26 +28,11 @@
         public string Name { get; set; }
     }
 
-    public class ParamNode<T> : ParamNode
+    public abstract class ParamNode<T> : ParamNode
     {
         protected ParamNode(string name)
         {
             Name = name;
-        }
-
-        public override bool TryParse(string value, out object obj)
-        {
-            try
-            {
-                var tc = TypeDescriptor.GetConverter(this.Type);
-                obj = tc.ConvertFromString(null, CultureInfo.InvariantCulture, value);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                obj = null;
-                return false;
-            }
         }
 
         public override Type Type

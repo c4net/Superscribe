@@ -27,45 +27,20 @@
 
         public Queue<string> RemainingSegments { get; private set; }
 
-        public RouteData WalkRoute(string route, string method, RouteData info)
+        public IModuleRouteData WalkRoute(string route, string method, IModuleRouteData info)
         {
-            string querystring = null;
             this.Method = info.Method = method;
             this.Route = info.Url = route;
 
-            CacheEntry<RouteData> cacheEntry;
+            CacheEntry<IModuleRouteData> cacheEntry;
             if (routeCache.TryGet(method + "-" + route, out cacheEntry))
             {
-                info = cacheEntry.Info;
+                info.Parameters = cacheEntry.Info.Parameters;
                 info.Response = cacheEntry.OnComplete(info);
 
                 info.FinalFunctionExecuted = true;
 
                 return info;
-            }
-
-            var parts = route.Split('?');
-            if (parts.Length > 0)
-            {
-                route = parts[0];
-            }
-
-            if (parts.Length > 1)
-            {
-                querystring = parts[1];
-            }
-
-            if (!string.IsNullOrEmpty(querystring))
-            {
-                var queries = querystring.Split('&');
-                foreach (var query in queries)
-                {
-                    if (query.Contains("="))
-                    {
-                        var operands = query.Split('=');
-                        info.Parameters[operands[0]] = Uri.UnescapeDataString(operands[1]);
-                    }
-                }
             }
 
             this.RemainingSegments = new Queue<string>(route.Split('/'));
@@ -84,7 +59,7 @@
             return string.Empty;
         }
 
-        public void WalkRoute(RouteData info, GraphNode match)
+        public void WalkRoute(IModuleRouteData info, GraphNode match)
         {
             FinalFunction onComplete = null;
             while (match != null)
@@ -139,13 +114,13 @@
 
             if (onComplete != null)
             {
-                routeCache.Store(this.Method + "-" + this.Route, new CacheEntry<RouteData> { Info = info, OnComplete = onComplete.Function });
+                routeCache.Store(this.Method + "-" + this.Route, new CacheEntry<IModuleRouteData> { Info = info, OnComplete = onComplete.Function });
                 info.Response = onComplete.Function(info);
                 info.FinalFunctionExecuted = true;
             }
         }
 
-        private GraphNode FindNextMatch(RouteData info, string segment, IEnumerable<GraphNode> states)
+        private GraphNode FindNextMatch(IModuleRouteData info, string segment, IEnumerable<GraphNode> states)
         {
             return !string.IsNullOrEmpty(segment) ?
                 states.FirstOrDefault(o => o.ActivationFunction(info, segment))

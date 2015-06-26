@@ -7,7 +7,7 @@
 
     public static class To
     {
-        public static Func<dynamic, object> Action(string name)
+        public static Func<object, object> Action(string name)
         {
             return o =>
                 {

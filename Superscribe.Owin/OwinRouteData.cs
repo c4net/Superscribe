@@ -13,7 +13,8 @@
     {
         public OwinRouteData()
         {
-            this.Parameters = new DynamicDictionary();
+            this.QueryParameters = new Dictionary<string, object>();
+            this.Parameters = new Dictionary<string, object>();
             this.Pipeline = new List<Middleware>();
         }
         
@@ -23,7 +24,7 @@
 
         public List<Middleware> Pipeline { get; set; }
 
-        public T Bind<T>() where T : class
+        public override T Bind<T>()
         {
             string[] incomingMediaTypes;
             if (this.Environment.TryGetHeaderValues("content-type", out incomingMediaTypes))

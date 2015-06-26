@@ -1,4 +1,6 @@
 ﻿
+using Superscribe.Engine;
+
 namespace Superscribe.Models
 {
     using System;
@@ -9,7 +11,7 @@ namespace Superscribe.Models
         {
         }
 
-        public ExclusiveFinalFunction(string method, Func<dynamic, object> func)
+        public ExclusiveFinalFunction(string method, Func<IModuleRouteData, object> func)
             : base(method, func)
         {
         }
@@ -33,7 +35,7 @@ namespace Superscribe.Models
         {
         }
 
-        public FinalFunction(string method, Func<dynamic, object> func)
+        public FinalFunction(string method, Func<IModuleRouteData, object> func)
         {
             this.Method = method;
             this.Function = func;
@@ -49,7 +51,7 @@ namespace Superscribe.Models
 
         public string Method { get; set; }
 
-        public Func<dynamic, object> Function { get; set; }
+        public Func<IModuleRouteData, object> Function { get; set; }
         
         public static FinalFunctionList operator |(FinalFunction function, FinalFunction other)
         {

@@ -1,4 +1,6 @@
-﻿namespace Superscribe.WebApi
+﻿using System.Collections.Generic;
+
+namespace Superscribe.WebApi
 {
     using System.Net.Http;
     using System.Net.Http.Formatting;
@@ -12,7 +14,7 @@
     {
         public WebApiRouteData()
         {
-            this.Parameters = new DynamicDictionary();
+            this.Parameters = new Dictionary<string, object>();
         }
 
         public HttpRequestMessage Request { get; set; }

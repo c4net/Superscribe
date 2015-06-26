@@ -37,29 +37,29 @@
             this.method = method;
         }
 
-        public Func<T, object> this[string s]
+        public Func<IModuleRouteData, object> this[string s]
         {   
             set
             {
                 if (s == "/")
                 {
-                    this.baseFinals.Add(new ExclusiveFinalFunction(this.method, f => value(f)));
+                    this.baseFinals.Add(new ExclusiveFinalFunction(this.method, value));
                     
                 }
                 else
                 {
                     var node = new ConstantNode(s);
-                    node.FinalFunctions.Add(new ExclusiveFinalFunction(this.method, f => value(f)));
+                    node.FinalFunctions.Add(new ExclusiveFinalFunction(this.method, value));
                     this.bindings.Add(() => node);
                 }
             }
         }
 
-        public Func<T, object> this[GraphNode s]
+        public Func<IModuleRouteData, object> this[GraphNode s]
         {
             set
             {
-                s = s * (f => value(f));
+                s.FinalFunctions.Add(new ExclusiveFinalFunction(this.method, value));
                 this.bindings.Add(() => s.Base());
             }
         }

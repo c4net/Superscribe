@@ -12,7 +12,7 @@
         public SuperscribeOptions()
         {
             this.StringRouteParser = new StringRouteParser();
-            this.RouteCache = new UselessCache();
+            this.RouteCache = new RouteCache();
             this.RouteWalkerFactory = baseNode => new RouteWalker(baseNode, this.RouteCache);
         }
 

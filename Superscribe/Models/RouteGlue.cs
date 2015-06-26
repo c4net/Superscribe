@@ -34,12 +34,12 @@
             return others;
         }
 
-        public static NodeFuture operator /(RouteGlue state, Func<dynamic, string, bool> activation)
+        public static NodeFuture operator /(RouteGlue state, Func<object, string, bool> activation)
         {
             return new NodeFuture { ActivationFunction = activation };
         }
 
-        public static FinalFunction operator *(RouteGlue state, Func<dynamic, object> other)
+        public static FinalFunction operator *(RouteGlue state, Func<object, object> other)
         {
             var function = new FinalFunction { Method = state.Method, Function = other };
             return function;

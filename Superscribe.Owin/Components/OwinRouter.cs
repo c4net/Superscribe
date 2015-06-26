@@ -1,4 +1,6 @@
-﻿namespace Superscribe.Owin.Components
+﻿using Superscribe.Engine;
+
+namespace Superscribe.Owin.Components
 {
     using System;
     using System.Collections.Generic;
@@ -26,11 +28,35 @@
 
         public async Task Invoke(IDictionary<string, object> environment)
         {
-            var path = environment["owin.RequestPath"].ToString();
-            var method = environment["owin.RequestMethod"].ToString();
-            
+            var path = environment["owin.RequestPath"].ToString();           
+            var method = environment["owin.RequestMethod"].ToString();            
+           
             var routeData = new OwinRouteData { Environment = environment, Config = engine.Config };
-            var walker = this.engine.Walker();
+            if (environment.ContainsKey("Microsoft.Owin.Query#dictionary"))
+            {
+                var queryParams = environment["Microsoft.Owin.Query#dictionary"] as IDictionary<string, string[]>;
+                if (queryParams != null)
+                {
+                    foreach (var key in queryParams.Keys)
+                    {
+                        if (routeData.QueryParameters.ContainsKey(key))
+                        {
+                            continue;
+                        }
+
+                        var value = queryParams[key];
+                        if (value.Length <= 1)
+                        {
+                            routeData.QueryParameters[key] = value.FirstOrDefault();
+                            continue;
+                        }
+
+                        routeData.QueryParameters[key] = value;
+                    }
+                }
+            }
+
+            var walker = this.engine.Walker();            
             var data = walker.WalkRoute(path, method, routeData);
 
             environment["superscribe.RouteData"] = data;

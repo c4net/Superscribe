@@ -4,6 +4,6 @@
 
     public interface IRouteDataProvider
     {
-        IRouteData GetData(string url, string method, Func<RouteData> factory);
+        IModuleRouteData GetData(string url, string method, Func<IModuleRouteData> factory);
     }
 }

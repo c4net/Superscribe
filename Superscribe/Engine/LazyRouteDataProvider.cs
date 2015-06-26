@@ -6,7 +6,7 @@
     {
         private readonly IRouteWalker routeWalker;
 
-        private IRouteData data;
+        private IModuleRouteData data;
 
         public string Uri { get; private set; }
 
@@ -17,7 +17,7 @@
             this.routeWalker = routeWalker;
         }
 
-        public IRouteData GetData(string uri, string method, Func<RouteData> factory)
+        public IModuleRouteData GetData(string uri, string method, Func<IModuleRouteData> factory)
         {
             if (string.IsNullOrEmpty(this.Uri) && string.IsNullOrEmpty(this.Method))
             {

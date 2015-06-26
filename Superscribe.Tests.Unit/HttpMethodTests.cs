@@ -17,22 +17,22 @@
             walker = subject.Walker();
         };
 
-        protected static object Hello(dynamic o)
+        protected static object Hello(object o)
         {
             return string.Format("Hello {0}", o.Parameters.Name);
         }
 
-        protected static object CheckAge(dynamic o)
+        protected static object CheckAge(object o)
         {
             return o.Parameters.Age >= 18 ? "Access granted" : "Too young";
         }
 
-        protected static object GetProduct(dynamic o)
+        protected static object GetProduct(object o)
         {
             return "Product Details";
         }
 
-        protected static object UpdateProduct(dynamic o)
+        protected static object UpdateProduct(object o)
         {
             return "Update Product";
         }

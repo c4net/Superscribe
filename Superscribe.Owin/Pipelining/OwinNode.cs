@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-
+    
     using global::Owin;
 
     using Superscribe.Models;
@@ -29,7 +28,6 @@
             node.ActionFunctions.Add("Pipeline", (o, s) =>
             {
                 var routeData = o as OwinRouteData;
-                Debug.Assert(routeData != null, "routeData != null");
 
                 foreach (var middleware in this.Middleware)
                 {

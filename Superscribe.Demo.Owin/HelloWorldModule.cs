@@ -6,17 +6,27 @@
     {
         public HelloWorldModule()
         {
-            this.Get["/"] = _ => "Hello world";
+            this.Get["/"] = PeformHelloWorld;
 
-            this.Get["Test"] = _ => new { Message = "Hello World" };
+            this.Get["TestByName" / (Superscribe.Models.String)"Name"] = TestByName;
 
             this.Post["Test"] = _ =>
                 {
                     var product = _.Bind<Product>();
 
-                    _.StatusCode = 201;
+                    ((OwinRouteData)_).StatusCode = 201;
                     return new { Message = string.Format("Received product {0}", product.Name) };
                 };
+        }
+
+        private object TestByName(Engine.IModuleRouteData arg)
+        {
+            return "ByName";
+        }
+
+        private object PeformHelloWorld(Engine.IModuleRouteData arg)
+        {
+            return "Hello world";
         }
     }
 }

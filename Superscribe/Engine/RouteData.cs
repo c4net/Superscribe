@@ -1,12 +1,17 @@
-﻿namespace Superscribe.Engine
+﻿using Superscribe.Models;
+
+namespace Superscribe.Engine
 {
     using System.Collections.Generic;
 
     using Superscribe.Utils;
 
-    public class RouteData : IRouteData
+    public class RouteData : IModuleRouteData
     {
-        public dynamic Parameters { get; set; }
+
+        public IDictionary<string, object> QueryParameters { get; set; }
+
+        public IDictionary<string, object> Parameters { get; set; }
 
         public IDictionary<string, object> Environment { get; set; }
         
@@ -25,7 +30,17 @@
         public RouteData()
         {
             this.Environment = new Dictionary<string, object>();
-            this.Parameters = new DynamicDictionary();
+            this.Parameters = new Dictionary<string, object>();
+        }
+
+        public virtual T Bind<T>() where T : class
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual T Require<T>() where T : class
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

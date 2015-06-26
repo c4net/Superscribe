@@ -1,7 +1,9 @@
-﻿namespace Superscribe.Models
+﻿using System.Reflection;
+using Finsa.CodeServices.Common.Collections.Concurrent;
+
+namespace Superscribe.Models
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -11,9 +13,9 @@
 
     public class GraphNode : IEquatable<GraphNode>
     {
-        protected Func<RouteData, string, bool> activationFunction;
+        protected Func<IModuleRouteData, string, bool> activationFunction;
 
-        protected IDictionary<string, Action<RouteData, string>> actionFunctions;
+        protected IDictionary<string, Action<IModuleRouteData, string>> actionFunctions;
 
         /// <summary>
         /// Base constructor for superscribe states
@@ -23,7 +25,7 @@
             this.Edges = new ConcurrentQueue<GraphNode>();
             this.QueryString = new ConcurrentQueue<GraphNode>();
             this.FinalFunctions = new List<FinalFunction>();
-            this.ActionFunctions = new Dictionary<string, Action<RouteData, string>>();
+            this.ActionFunctions = new Dictionary<string, Action<IModuleRouteData, string>>();
 
             this.activationFunction = (routedata, segment) =>
             {
@@ -46,12 +48,12 @@
         /// <summary>
         /// Concurrent queue of available transitions from this state
         /// </summary>
-        public ConcurrentQueue<GraphNode> Edges { get; set; }
+        public Finsa.CodeServices.Common.Collections.Concurrent.ConcurrentQueue<GraphNode> Edges { get; set; }
 
         /// <summary>
         /// Concurrent queue of available querystring transitions
         /// </summary>
-        public ConcurrentQueue<GraphNode> QueryString { get; set; }
+        public Finsa.CodeServices.Common.Collections.Concurrent.ConcurrentQueue<GraphNode> QueryString { get; set; }
 
         /// <summary>
         /// Regex pattern to use when matching
@@ -65,7 +67,7 @@
 
         public object Result { get; set; }
 
-        public IDictionary<string, Action<RouteData, string>> ActionFunctions
+        public IDictionary<string, Action<IModuleRouteData, string>> ActionFunctions
         {
             get
             {
@@ -81,7 +83,7 @@
 
         public bool ActivationFunctionChanged { set; get; }
 
-        public Func<RouteData, string, bool> ActivationFunction
+        public Func<IModuleRouteData, string, bool> ActivationFunction
         {
             get
             {
@@ -214,7 +216,7 @@
         /// <param name="node"></param>
         /// <param name="activation"></param>
         /// <returns></returns>
-        public static NodeFuture operator /(GraphNode node, Func<dynamic, string, bool> activation)
+        public static NodeFuture operator /(GraphNode node, Func<object, string, bool> activation)
         {
             return new NodeFuture { Parent = node, ActivationFunction = activation };
         }
@@ -275,7 +277,7 @@
             return node;
         }
 
-        public static GraphNode operator *(GraphNode node, Func<dynamic, object> final)
+        public static GraphNode operator *(GraphNode node, Func<object, object> final)
         {
             node.FinalFunctions.Add(new FinalFunction { Function = o => o.Response = final(o) });
             return node;
@@ -354,8 +356,23 @@
                 return ((this.Pattern != null ? this.Pattern.GetHashCode() : 0) * 397) ^ (this.Template != null ? this.Template.GetHashCode() : 0);
             }
         }
-
+       
         #endregion
+
+    }
+
+    static class TypeExtensions
+    {
+
+        public static bool IsInstanceOfType(this Type type, object value)
+        {
+            if (type == value.GetType())
+            {
+                return true;
+            }
+
+            return value.GetType().GetTypeInfo().IsSubclassOf(type);
+        }
 
     }
 }

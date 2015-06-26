@@ -1,8 +1,10 @@
-﻿namespace Superscribe.Owin.Components
+﻿using System.IO;
+using Superscribe.Engine;
+
+namespace Superscribe.Owin.Components
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -21,8 +23,7 @@
         public async Task Invoke(IDictionary<string, object> environment)
         {
             var routeData = environment["superscribe.RouteData"] as OwinRouteData;
-            Debug.Assert(routeData != null, "routeData != null");
-
+            
             if (routeData.ExtraneousMatch)
             {
                 environment.SetResponseStatusCode(404);
@@ -43,6 +44,13 @@
                 environment.SetResponseStatusCode(routeData.StatusCode);
             }
 
+            var response = routeData.Response as Response;
+            if (response != null)
+            {
+                InvokeResponse(environment, response);
+                return;
+            }            
+
             string[] outgoingMediaTypes;
             if (environment.TryGetHeaderValues("accept", out outgoingMediaTypes))
             {
@@ -57,11 +65,30 @@
 
                     return;
                 }
+            }
 
-                throw new NotSupportedException("Media type is not supported");
+            // Is there already a response?
+            if (routeData.Response != null)
+            {
+                return;
             }
 
             throw new NotSupportedException("Response type is not supported");
         }
+
+        private static void InvokeResponse(IDictionary<string, object> environment, Response response)
+        {
+            var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+            var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");            
+            owinResponseHeaders["Content-Type"] = new[] { response.ContentType };
+            response.Contents(owinResponseBody);
+        }
+
+        private static T Get<T>(IDictionary<string, object> env, string key)
+        {
+            object value;
+            return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
+        }
+
     }
 }

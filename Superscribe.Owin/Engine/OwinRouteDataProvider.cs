@@ -6,14 +6,14 @@
 
     public class OwinRouteDataProvider : IRouteDataProvider
     {
-        private readonly IRouteData data;
+        private readonly IModuleRouteData data;
 
-        public OwinRouteDataProvider(IRouteData data)
+        public OwinRouteDataProvider(IModuleRouteData data)
         {
             this.data = data;
         }
 
-        public IRouteData GetData(string uri, string method, Func<RouteData> factory)
+        public IModuleRouteData GetData(string uri, string method, Func<IModuleRouteData> factory)
         {
             return this.data;
         }

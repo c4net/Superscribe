@@ -17,24 +17,24 @@
             walker = subject.Walker();
         };
 
-        protected static object Hello(dynamic o)
+        protected static object Hello(IModuleRouteData o)
         {
-            return string.Format("Hello {0}", o.Parameters.Name);
+            return string.Format("Hello {0}", o.Parameters["Name"]);
         }
 
-        protected static object HelloUnknown(dynamic o)
+        protected static object HelloUnknown(IModuleRouteData o)
         {
             return "Hello Unknown Person";
         }
 
-        protected static object CommentOnMood(dynamic o)
+        protected static object CommentOnMood(IModuleRouteData o)
         {
-            return o.Parameters.Happy ? "Me too!" : "Why so sad?";
+            return (bool)o.Parameters["Happy"] ? "Me too!" : "Why so sad?";
         }
 
-        protected static object CheckAge(dynamic o)
+        protected static object CheckAge(IModuleRouteData o)
         {
-            return o.Parameters.Age >= 18 ? "Access granted" : "Too young";
+            return o.Parameters["Age"] >= 18 ? "Access granted" : "Too young";
         }
     }
 

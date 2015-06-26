@@ -1,6 +1,7 @@
-﻿namespace Superscribe.Cache
+﻿using Finsa.CodeServices.Common.Collections.Concurrent;
+
+namespace Superscribe.Cache
 {
-    using System.Collections.Concurrent;
 
     public interface IRouteCache
     {
@@ -29,7 +30,8 @@
         
         public void Store<T>(string url, CacheEntry<T> handler)
         {
-            this.Cache.TryAdd(url, handler);
+            object foundObject;
+            this.Cache.TryAdd(url, handler, out foundObject);
         }
     }
 }

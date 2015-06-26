@@ -4,7 +4,7 @@
 
     public interface IWebApiRouteData
     {
-        dynamic Parameters { get; }
+        object Parameters { get; }
 
         bool ActionNameSpecified { get; }
 

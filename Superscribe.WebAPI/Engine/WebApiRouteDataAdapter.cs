@@ -13,7 +13,7 @@
             this.routeData = routeData;
         }
 
-        public dynamic Parameters
+        public object Parameters
         {
             get
             {

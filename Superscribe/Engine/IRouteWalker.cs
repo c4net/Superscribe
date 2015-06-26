@@ -12,6 +12,6 @@ namespace Superscribe.Engine
 
         Queue<string> RemainingSegments { get; }
         
-        RouteData WalkRoute(string route, string method, RouteData info);
+        IModuleRouteData WalkRoute(string route, string method, IModuleRouteData info);
     }
 }

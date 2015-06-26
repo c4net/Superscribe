@@ -23,7 +23,7 @@
 
     public class Tests
     {
-        public static object SwitchActionForApp(dynamic routeData)
+        public static object SwitchActionForApp(object routeData)
         {
             routeData.Environment[Constants.ActionNamePropertyKey] = "GetByIdentifier";
             return new FinalFunction.ExecuteAndContinue();

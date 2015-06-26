@@ -6,7 +6,7 @@
     {
         public GraphNode Parent { get; set; }
 
-        public Func<dynamic, string, bool> ActivationFunction { get; set; }
+        public Func<object, string, bool> ActivationFunction { get; set; }
 
         public static GraphNode operator *(NodeFuture future, string constant)
         {

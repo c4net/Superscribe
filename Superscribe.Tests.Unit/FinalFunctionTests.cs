@@ -17,7 +17,7 @@
                 walker = subject.Walker();
             };
 
-        protected static object HelloWorld(dynamic o)
+        protected static object HelloWorld(object o)
         {
             return "Hello world";
         }

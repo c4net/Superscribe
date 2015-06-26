@@ -1,4 +1,6 @@
-﻿namespace Superscribe.Owin.Extensions
+﻿using Superscribe.Engine;
+
+namespace Superscribe.Owin.Extensions
 {
     using System.Collections.Generic;
     using System.IO;
@@ -8,6 +10,8 @@
 
     public static class EnvironmentExtensions
     {
+
+
         public static Stream GetRequestBody(this IDictionary<string, object> environment)
         {
             return (Stream)environment["owin.RequestBody"];
@@ -17,7 +21,7 @@
         {
             var data = Encoding.UTF8.GetBytes(text);
             return ((Stream)environment["owin.ResponseBody"]).WriteAsync(data, 0, data == null ? 0 : data.Length, CancellationToken.None);
-        }
+        }      
 
         public static Stream GetResponse(this IDictionary<string, object> environment)
         {

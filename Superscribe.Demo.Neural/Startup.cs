@@ -23,7 +23,7 @@
             app.UseSuperscribeRouter(engine);
         }
 
-        private double ComputeResult(dynamic o, string segment)
+        private double ComputeResult(object o, string segment)
         {
             var param1 = (bool)o.Parameters["Param1"];
             var param2 = (bool)o.Parameters["Param2"];
@@ -31,7 +31,7 @@
             return Network.GetOutput(param1, param2);
         }
 
-        private object ExplainPurpose(dynamic o)
+        private object ExplainPurpose(object o)
         {
             return "<p>I'm trying to learn XOR, and I need your help!<p>" + "<p>Try me out...</p>"
                          + "<ul><li><a href='/xor/false/false'>What is false XOR false?</a></li>"
@@ -40,17 +40,17 @@
                          + "<li><a href='/xor/true/true'>What is true XOR true?</a></li></ul>";
         }
 
-        private object RespondTrue(dynamic o)
+        private object RespondTrue(object o)
         {
             return this.Respond(o, true);
         }
 
-        private object RespondFalse(dynamic o)
+        private object RespondFalse(object o)
         {
             return this.Respond(o, false);
         }
 
-        private object Respond(dynamic o, bool value)
+        private object Respond(object o, bool value)
         {
             var param1 = (bool)o.Parameters["Param1"];
             var param2 = (bool)o.Parameters["Param2"];
@@ -65,7 +65,7 @@
                     value.ToString().ToLower());
         }
 
-        private object LearnThatItWasCorrect(dynamic o)
+        private object LearnThatItWasCorrect(object o)
         {
             var param1 = (bool)o.Parameters["Param1"];
             var param2 = (bool)o.Parameters["Param2"];
@@ -76,7 +76,7 @@
             return "<p>Great, thanks for reinforcing that for me!</p><a href='/'>Try again</a>";
         }
 
-        private object LearnThatItWasWrong(dynamic o)
+        private object LearnThatItWasWrong(object o)
         {
             var param1 = (bool)o.Parameters["Param1"];
             var param2 = (bool)o.Parameters["Param2"];
